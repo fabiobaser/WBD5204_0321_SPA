@@ -1,8 +1,9 @@
-import React from "react"
+import React from "react";
 import DefaultLayout from "../Layouts/Default";
 import Home from "./Home";
 import About from "./About";
 import Login from "./Login";
+import Register from "./Register";
 import Blog from "./Blog";
 
 export default [
@@ -14,6 +15,11 @@ export default [
   {
     path: "/login",
     component: Login,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/register",
+    component: Register,
     layout: DefaultLayout,
   },
   {

@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const loginRoute = require("./routes/login");
+const registerRoute = require("./routes/register");
 const postsRoute = require("./routes/posts");
 
 const jwt = require("jsonwebtoken");
@@ -16,8 +17,6 @@ const mongo = new MongoClient(connUrl);
 const server = express();
 server.use(cors());
 server.use(bodyParser.json());
-
-server.get("/", (req, res) => res.send("Hier isn server."));
 
 const authMiddleware = (req, res, next) => {
   if (!req.headers.authorization) {
@@ -44,7 +43,15 @@ const authMiddleware = (req, res, next) => {
   });
 };
 
+mongo.connect((err) => {
+  if (err) {
+    console.log(err);
+  }
+});
+
+server.get("/", (req, res) => res.send("Hier isn server."));
 server.post("/login", loginRoute);
+server.post("/register", registerRoute(mongo));
 server.get("/posts", authMiddleware, postsRoute);
 
 server.post("/contact", (req, res) => {
@@ -55,13 +62,4 @@ server.post("/contact", (req, res) => {
 
 server.listen(3000, () => {
   console.log("Der Server läuft");
-
-  // mongo.connect((err) => {
-  //   const db = mongo.db("greenfox");
-  //   const dinnerplans = db.collection("dinnerplans");
-
-  //   dinnerplans.find({}).toArray((err, docs) => console.log(docs));
-
-  //   mongo.close();
-  // });
 });

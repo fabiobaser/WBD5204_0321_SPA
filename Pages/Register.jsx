@@ -5,10 +5,10 @@ import { Redirect, useHistory } from "react-router-dom";
 
 export default () => {
   const context = useMainContext();
-  const history = useHistory();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -19,16 +19,15 @@ export default () => {
   const handleInput = (event) => {
     const { name, value } = event.target;
 
-    if (name === "username") {
-      setUsername(value);
-    } else if (name === "password") {
-      setPassword(value);
-    }
-  };
+    const setter = {
+      username: setUsername,
+      password: setPassword,
+      passwordRepeat: setPasswordRepeat,
+    };
 
-  const redirectToRegister = () => {
-    console.log("Hallo");
-    history.push("/register");
+    const setFunction = setter[name];
+
+    setFunction(value);
   };
 
   if (context.loggedIn) return <Redirect to={"/users"} />;
@@ -36,7 +35,7 @@ export default () => {
   return (
     <div>
       <Card style={{ margin: "auto", marginTop: "4rem", padding: "2rem" }}>
-        <h1>Anmelden</h1>
+        <h1>Registrieren</h1>
         <Form>
           <Form.Field>
             <label>Benutzername</label>
@@ -57,6 +56,19 @@ export default () => {
               onInput={handleInput}
             />
           </Form.Field>
+          <Form.Field>
+            <label>Passwort wiederholen</label>
+            <input
+              placeholder="123456"
+              type={"password"}
+              name={"passwordRepeat"}
+              value={passwordRepeat}
+              onInput={handleInput}
+            />
+          </Form.Field>
+          <Form.Field>
+            <Checkbox label="Ich habe die AGBs übersprungen aber akzeptiere sie trotzdem" />
+          </Form.Field>
           <Button
             type="submit"
             fluid
@@ -64,11 +76,8 @@ export default () => {
             color={"green"}
             onClick={handleClick}
           >
-            Anmelden
+            Registrieren
           </Button>
-          <h4 onClick={redirectToRegister} style={{ textAlign: "center" }}>
-            Jetzt registrieren
-          </h4>
         </Form>
       </Card>
     </div>
