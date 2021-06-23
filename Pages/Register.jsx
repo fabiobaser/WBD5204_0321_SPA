@@ -10,10 +10,20 @@ export default () => {
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
-  const handleClick = (event) => {
+  const [registerResult, setRegisterResult] = useState({
+    success: false,
+    code: "",
+  });
+
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    context.logIn(username, password);
+    if (username === "" || password === "" || password !== passwordRepeat)
+      return;
+
+    context.register(username, password).then((result) => {
+      if (!result.success) setRegisterResult(result);
+    });
   };
 
   const handleInput = (event) => {
@@ -30,10 +40,13 @@ export default () => {
     setFunction(value);
   };
 
+  console.log(registerResult);
+
   if (context.loggedIn) return <Redirect to={"/users"} />;
 
   return (
     <div>
+      {registerResult.success && <Redirect to={"/users"} />}
       <Card style={{ margin: "auto", marginTop: "4rem", padding: "2rem" }}>
         <h1>Registrieren</h1>
         <Form>
@@ -45,6 +58,11 @@ export default () => {
               value={username}
               onInput={handleInput}
             />
+            {registerResult.code === "userExists" && (
+              <p style={{ color: "red", fontSize: "80%", marginTop: "0.5rem" }}>
+                Benutzername existiert bereits
+              </p>
+            )}
           </Form.Field>
           <Form.Field>
             <label>Passwort</label>
@@ -55,6 +73,11 @@ export default () => {
               value={password}
               onInput={handleInput}
             />
+            {password.length <= 5 && (
+              <p style={{ color: "red", fontSize: "80%", marginTop: "0.5rem" }}>
+                Passwort muss mindestens 6 Zeichen lang sein
+              </p>
+            )}
           </Form.Field>
           <Form.Field>
             <label>Passwort wiederholen</label>
@@ -65,6 +88,11 @@ export default () => {
               value={passwordRepeat}
               onInput={handleInput}
             />
+            {password !== passwordRepeat && (
+              <p style={{ color: "red", fontSize: "80%", marginTop: "0.5rem" }}>
+                Passwörter stimmen nicht überein
+              </p>
+            )}
           </Form.Field>
           <Form.Field>
             <Checkbox label="Ich habe die AGBs übersprungen aber akzeptiere sie trotzdem" />
@@ -74,7 +102,7 @@ export default () => {
             fluid
             basic
             color={"green"}
-            onClick={handleClick}
+            onClick={handleSubmit}
           >
             Registrieren
           </Button>

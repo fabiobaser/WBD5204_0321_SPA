@@ -1,17 +1,4 @@
-const CryptoJS = require("crypto-js");
-const { genToken } = require("../token");
-
-const SECRET = "GANZGEHEIM";
-
-function encrypt(message) {
-  return CryptoJS.AES.encrypt(message, SECRET).toString();
-}
-
-function decrypt(encryptedMessage) {
-  return CryptoJS.AES.decrypt(encryptedMessage, SECRET).toString(
-    CryptoJS.enc.Utf8
-  );
-}
+const { genToken, encrypt } = require("../auth");
 
 const register = (mongo) => {
   return function (req, res) {

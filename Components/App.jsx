@@ -33,8 +33,35 @@ const App = () => {
 
   const contextValue = {
     loggedIn,
-    logIn: (username, password) => {
-      setLoggedIn(true);
+    register: async (username, password) => {
+      const fetchResult = await fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const response = await fetchResult.json();
+
+      if (response.success) setLoggedIn(true);
+
+      return response;
+    },
+    logIn: async (username, password) => {
+      const fetchResult = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const response = await fetchResult.json();
+
+      if (response.success) setLoggedIn(true);
+
+      return response;
     },
     logOut: () => {
       setLoggedIn(false);

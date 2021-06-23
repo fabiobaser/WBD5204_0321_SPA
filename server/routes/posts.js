@@ -1,4 +1,4 @@
-const { verifyToken } = require("../token");
+const { verifyToken } = require("../auth");
 
 module.exports = (req, res) => {
   console.log(req.username);

@@ -10,10 +10,20 @@ export default () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [registerResult, setRegisterResult] = useState({
+    success: false,
+    code: "",
+  });
+
   const handleClick = (event) => {
     event.preventDefault();
 
-    context.logIn(username, password);
+    if (username === "" && password === "") {
+      setRegisterResult({ success: false, code: "missingCredentials" });
+      return;
+    }
+
+    context.logIn(username, password).then(setRegisterResult);
   };
 
   const handleInput = (event) => {
@@ -57,6 +67,19 @@ export default () => {
               onInput={handleInput}
             />
           </Form.Field>
+          {registerResult.code === "wrongCredentials" && (
+            <>
+              <p style={{ color: "red", fontSize: "80%", marginTop: "0.5rem" }}>
+                Der Benutzername und Passwort sind flasch
+              </p>
+              <h4 style={{ textAlign: "center" }}>Password vergessen?</h4>
+            </>
+          )}
+          {registerResult.code === "missingCredentials" && (
+            <p style={{ color: "red", fontSize: "80%", marginTop: "0.5rem" }}>
+              Die Felder müssen ausgefüllt werden
+            </p>
+          )}
           <Button
             type="submit"
             fluid

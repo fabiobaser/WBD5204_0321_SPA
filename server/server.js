@@ -50,7 +50,7 @@ mongo.connect((err) => {
 });
 
 server.get("/", (req, res) => res.send("Hier isn server."));
-server.post("/login", loginRoute);
+server.post("/login", loginRoute(mongo));
 server.post("/register", registerRoute(mongo));
 server.get("/posts", authMiddleware, postsRoute);
 
